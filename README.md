@@ -20,7 +20,7 @@ Subsequently, a consolidated table was extracted in **`CSV`** format and importe
 
 The **`Python` code** used to prepare, inspect, and clean the dataset is available for reference at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/30c24ca7c1d7ec57e8c0b40365bf8ea2eac0632f/Partner_Performance_Insights_Business_Case.ipynb).
 
-The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/hyrtx/bike-rental-business-case/blob/main/washington_bikes_analysis.ipynb).
+The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/5995d325f714914589f45f10df4e0271151b3adc/SQL%20Documentation.md).
 
 The **interactive dashboard**, designed to visualize and interact with the dataset, is accessible at [this link](https://lookerstudio.google.com/reporting/257afb5e-76c0-4ab8-9da6-e5f17ca62766).
 
