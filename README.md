@@ -18,7 +18,7 @@ For the development of this project, **`Python`** was used for data preparation,
 
 Subsequently, a consolidated table was extracted in **`CSV`** format and imported into **`Google Sheets`**, enabling integration with **`Looker Studio`**. This connection facilitated the creation of interactive and dynamic visualizations, supporting data analysis based on formulated hypotheses and providing a clearer and more in-depth understanding of the results.
 
-The **`Python` code** used to prepare, inspect, and clean the dataset is available for reference at [this link](https://github.com/hyrtx/bike-rental-business-case/blob/main/washington_bikes_analysis.ipynb).
+The **`Python` code** used to prepare, inspect, and clean the dataset is available for reference at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/30c24ca7c1d7ec57e8c0b40365bf8ea2eac0632f/Partner_Performance_Insights_Business_Case.ipynb).
 
 The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/hyrtx/bike-rental-business-case/blob/main/washington_bikes_analysis.ipynb).
 
