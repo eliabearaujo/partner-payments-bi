@@ -1,6 +1,6 @@
 # Partner Performance Insights - Business Case
 
-![gym_background.jpg](assets/img/gym_background.jpg)
+![gym_background.jpg](Assets/img/gym_background.jpg)
 
 ## Project background
 
@@ -12,7 +12,7 @@ The insights are provided in the following areas:
 - **Segment Analysis**
 - **Impact of Cancellations and No-Shows**
 
-![tools.jpg](assets/img/tools.png)
+![tools.jpg](Assets/img/tools.png)
 
 For the development of this project, **`Python`** was used for data preparation, correction, and cleaning, leveraging its flexibility and efficiency in handling both small and large volumes of information. After completing these steps, the data was exported in **`CSV`** format and imported into **`SQL Server Management Studio (SSMS)`**, where it was structured and manipulated to generate key correlations and insights.
 
