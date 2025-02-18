@@ -117,3 +117,17 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 - - These services represent almost **40% of the total partner payouts**, but due to cancellations, they may be operating at a loss.
 
 - - They experience **~45% of unfulfilled sessions**, and in **~65% of cases, payments fall below actual costs**, which may threaten the sustainability of these services on the platform.
+
+## Recomendaçoes
+
+-
+
+## Assumptions
+
+During the initial data assessment, the following assumptions were made to ensure consistent calculations and interpretations:
+
+- CAP Adjustment → Upon reviewing the provided datasets, I identified that the CAP value is approximately 10 times the session cost. Based on the case description, which defines the CAP (Maximum Payment Limit) as the maximum amount that can be paid per visit, and considering the provided example where the session cost is close to the CAP value, we adjusted this metric by dividing the reported CAP by 10.
+
+- Classification of Payment Type → The "Retroactive" payment type was classified as completed sessions, which were paid with a certain delay.
+
+- CAP Hit Calculation → To calculate the CAP hit metric, we considered transactions where the CAP is equal to the actual session cost as having reached the payment limit.
