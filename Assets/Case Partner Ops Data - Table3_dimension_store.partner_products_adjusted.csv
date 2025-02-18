@@ -1,0 +1,16 @@
+satya_partner_product_id,activity_name,product_cost_per_usage,product_cap_value,segment_type,last_price_update
+1001,Musculação,"50,0","50,0",Full Service Gym,2025-01-10 0:00:00
+1002,Aulas de Personal Training,"100,0","80,0",Full Service Gym,2025-01-15 0:00:00
+1003,Aulas de Yoga,"30,0","30,0",Studio,2025-01-20 0:00:00
+1004,Natação,"120,0","60,0",Full Service Gym,2023-05-10 0:00:00
+1005,Aulas de Pilates,"40,0","40,0",Studio,2025-01-25 0:00:00
+1006,Aulas de Zumba,"25,0","37,5",Studio,2025-01-28 0:00:00
+1007,Treinamento de Força,"60,0","60,0",Full Service Gym,2025-01-05 0:00:00
+1008,Aulas de CrossFit,"70,0","70,0",Full Service Gym,2025-01-10 0:00:00
+1009,Aulas de Natação Avançada,"80,0","80,0",Full Service Gym,2025-01-12 0:00:00
+1010,Artes Marciais,"50,0","25,0",Lutas,2025-01-18 0:00:00
+1011,Aulas de Cardio,"40,0","40,0",Full Service Gym,2025-01-22 0:00:00
+1012,Pacote de Spa,"150,0","150,0",Wellness Center,2025-01-07 0:00:00
+1013,Acesso ao Sauna,"30,0","30,0",Wellness Center,2025-01-15 0:00:00
+1014,Aulas de Nutrição,"100,0","80,0",Wellness Center,2025-01-20 0:00:00
+1015,Avaliação Física,"60,0","60,0",Full Service Gym,2025-01-25 0:00:00

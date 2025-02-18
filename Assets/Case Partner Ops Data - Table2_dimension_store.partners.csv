@@ -1,0 +1,6 @@
+core_partner_id,partner_trade_name,address,contact_number,segment_type,country
+101,FitClub Gym,"123 Main St, Downtown",(202) 123-4567,Full Service Gym,United States
+102,PowerHouse Fitness,"456 Oak Ave, Uptown",(202) 234-5678,Full Service Gym,United States
+103,Flex Gym,"789 Pine Rd, Midtown",(202) 345-6789,Studio,United States
+104,HealthFirst Wellness,"101 Health Blvd, East",(202) 456-7890,Wellness Center,United States
+105,StrongFit Studio,"202 Fit Ln, Suburbs",(202) 567-8901,Studio,United States
