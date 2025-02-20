@@ -143,7 +143,7 @@ HAVING COUNT(*) > 1;
 
 Having confirmed that customers can schedule only one appointment per day, we will proceed with the analysis from two distinct perspectives.
 
-The first perspective focuses on the partner, their segment, and the products offered. The objective is to assess the partner's performance, understand their positioning relative to other partners, evaluate their adherence to the CAP, and identify potential areas for improvement.
+The first perspective focuses on the partner and their segment. The objective is to assess the partner's performance, understand their positioning relative to other partners, evaluate their adherence to the CAP, and identify potential areas for improvement.
 
 The second approach examines the different types of payments that each transaction can receive. We will classify the "Validation" and "Retroactive" options as confirmed and completed sessions, while "Late Cancel" and "No Show" transactions will be considered as unfulfilled sessions. This will allow us to assess the financial impact on partners and the costs incurred by us due to these types of transactions.
 
@@ -272,24 +272,24 @@ capped_visit_cost AS (
         CASE
             WHEN fpp.transaction_cost > fpp.product_cap THEN fpp.product_cap
             ELSE fpp.transaction_cost
-        END AS capped_cost -- Paga o menor valor entre transaction_cost e product_cap
+        END AS capped_cost
     FROM fact_partners_payout fpp
 ),
 segment_numbers AS (
     SELECT
-        dsp.segment_type, -- Segmento do parceiro
+        dsp.segment_type,
         COUNT(*) AS jan_total_visits,
         SUM(fpp.transaction_cost) AS jan_total_revenue,
         SUM(cvc.capped_cost) AS jan_total_payment,
-        ROUND(AVG(fpp.product_cap), 2) AS avg_cap, -- CAP médio por segmento
+        ROUND(AVG(fpp.product_cap), 2) AS avg_cap,
         SUM(CASE
             WHEN fpp.transaction_cost >= fpp.product_cap THEN 1
             ELSE 0
-        END) AS cap_hit_count, -- Conta quantas vezes o CAP foi atingido
+        END) AS cap_hit_count,
         SUM(CASE
             WHEN fpp.transaction_cost > fpp.product_cap THEN 1
             ELSE 0
-        END) AS cap_less_than_cost_count -- Conta quantas vezes o CAP era menor que o custo
+        END) AS cap_less_than_cost_count
     FROM fact_partners_payout fpp
     JOIN dim_store_partners dsp ON fpp.core_partner_id = dsp.core_partner_id
     LEFT JOIN capped_visit_cost cvc
@@ -345,3 +345,93 @@ The result of this query is:
 * - The pct_cap_less_than_cost metric shows that 31.58% of transactions in Wellness Centers have costs exceeding the CAP. In comparison, Studios and Full-Service Gyms are more balanced (~25%). This suggests that Wellness Centers may be under-remunerated more frequently, operating with reduced margins or even incurring losses on certain transactions.
 
 * - If this trend continues, partners in this segment may lose interest in the platform or need to adjust their pricing, which could reduce the platform's attractiveness to customers.
+
+### Analysis by Payment type
+
+Another valuable analysis is to understand the impact of unrealized sessions on the overall operation, including the associated costs and how they compare to sessions that were effectively completed.
+
+To achieve this, we will examine the same metrics as before, but this time focusing on categorizing payment methods. Sessions with payment methods categorized as retroactive or validation will be grouped as "Sessões Realizadas", while those categorized as late_cancel and no_show will be grouped as "Sessões Não Realizadas". With this approach, we have the following query:
+
+```sql
+  WITH all_days AS (
+    SELECT DISTINCT CAST(fpp.session_considered_at_localtime AS DATE) AS visit_date
+    FROM fact_partners_payout fpp
+),
+capped_visit_cost AS (
+    SELECT
+        fpp.core_partner_id,
+        fpp.gympass_individual_id,
+        fpp.partner_product_id,
+        fpp.session_considered_at_localtime,
+        fpp.transaction_cost,
+        fpp.product_cap,
+        fpp.transaction_type,
+        CASE
+            WHEN fpp.transaction_type IN ('Retroactive', 'Validation') THEN 'Sessões Realizadas'
+            WHEN fpp.transaction_type IN ('Late_Cancel', 'No_Show') THEN 'Sessões Não Realizadas'
+            ELSE 'Outros'
+        END AS session_group,
+        CASE
+            WHEN fpp.transaction_cost > fpp.product_cap THEN fpp.product_cap
+            ELSE fpp.transaction_cost
+        END AS capped_cost
+    FROM fact_partners_payout fpp
+),
+session_group_numbers AS (
+    SELECT
+        cvc.session_group,
+        COUNT(*) AS jan_total_visits,
+        SUM(fpp.transaction_cost) AS jan_total_revenue,
+        SUM(cvc.capped_cost) AS jan_total_payment,
+        ROUND(AVG(fpp.product_cap), 2) AS avg_cap,
+        SUM(CASE
+            WHEN fpp.transaction_cost >= fpp.product_cap THEN 1
+            ELSE 0
+        END) AS cap_hit_count,
+        SUM(CASE
+            WHEN fpp.transaction_cost > fpp.product_cap THEN 1
+            ELSE 0
+        END) AS cap_less_than_cost_count
+    FROM fact_partners_payout fpp
+    LEFT JOIN capped_visit_cost cvc
+        ON fpp.core_partner_id = cvc.core_partner_id
+        AND fpp.gympass_individual_id = cvc.gympass_individual_id
+        AND fpp.partner_product_id = cvc.partner_product_id
+        AND fpp.session_considered_at_localtime = cvc.session_considered_at_localtime
+    GROUP BY cvc.session_group
+),
+total_numbers AS (
+    SELECT
+        SUM(jan_total_visits) AS total_visits,
+        SUM(jan_total_revenue) AS total_revenue,
+        SUM(jan_total_payment) AS total_payment
+    FROM session_group_numbers
+)
+SELECT
+    sgn.session_group,
+    sgn.jan_total_visits,
+    ROUND(CAST(sgn.jan_total_visits AS FLOAT) / (SELECT COUNT(*) FROM all_days), 2) AS avg_visits_per_day,
+    ROUND(CAST(sgn.jan_total_revenue AS FLOAT) / (SELECT COUNT(*) FROM all_days), 2) AS avg_revenue_per_day,
+    sgn.jan_total_payment,
+    sgn.avg_cap,
+    sgn.cap_hit_count,
+    sgn.cap_less_than_cost_count,
+    ROUND(CAST(sgn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits,
+    ROUND(CAST(sgn.jan_total_revenue AS FLOAT) / tn.total_revenue * 100, 2) AS pct_total_revenue,
+    ROUND(CAST(sgn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment,
+    ROUND(CAST(sgn.cap_hit_count AS FLOAT) / sgn.jan_total_visits * 100, 2) AS pct_cap_hit,
+    ROUND(CAST(sgn.cap_less_than_cost_count AS FLOAT) / sgn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost
+FROM session_group_numbers sgn
+CROSS JOIN total_numbers tn
+ORDER BY sgn.jan_total_payment DESC;
+```
+
+The result of this query is:
+
+![Payments_perspective.png](Assets/img/Payments_perspective.png)
+
+**Key Insights and Observations:**
+
+- **Studios Dominate Visits and Revenue:**
+
+* - 43.43% of visits and 43.72% of revenue come from Studios. Studios appear to be the most popular choice, generating the majority of visits and revenue. However, Wellness Centers, despite having fewer visits, contribute a relatively high percentage of revenue. This suggests that the services offered by Wellness Centers may have higher added value, even though there is only one representative in this category (HealthFirst Wellness).
