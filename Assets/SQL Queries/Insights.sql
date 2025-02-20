@@ -50,6 +50,12 @@ partner_numbers AS (
         AND fpp.partner_product_id = cvc.partner_product_id
         AND fpp.session_considered_at_localtime = cvc.session_considered_at_localtime
     GROUP BY dsp.partner_trade_name
+),
+total_numbers AS (
+    SELECT
+        SUM(jan_total_visits) AS total_visits,
+        SUM(jan_total_payment) AS total_payment
+    FROM partner_numbers
 )
 SELECT 
     pn.partner_trade_name, 
@@ -59,8 +65,14 @@ SELECT
     pn.jan_total_payment,
     pn.avg_cap,
     pn.cap_hit_count,
-    pn.cap_less_than_cost_count
+    pn.cap_less_than_cost_count,
+    -- Percentuais adicionados
+    ROUND(CAST(pn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits, -- % de visitas em relação ao total
+    ROUND(CAST(pn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment, -- % do montante pago em relação ao total
+    ROUND(CAST(pn.cap_hit_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_cap_hit, -- % de vezes que o CAP foi atingido
+    ROUND(CAST(pn.cap_less_than_cost_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- % de vezes que o CAP era menor que o custo
 FROM partner_numbers pn
+CROSS JOIN total_numbers tn
 ORDER BY pn.jan_total_payment DESC;
 
 --visao por produto
@@ -97,7 +109,15 @@ product_numbers AS (
         SUM(CASE 
             WHEN fpp.transaction_cost > fpp.product_cap THEN 1 
             ELSE 0 
-        END) AS cap_less_than_cost_count -- Conta quantas vezes o CAP era menor que o custo
+        END) AS cap_less_than_cost_count, -- Conta quantas vezes o CAP era menor que o custo
+        SUM(CASE 
+            WHEN fpp.transaction_type = 'NO_SHOW' THEN 1 
+            ELSE 0 
+        END) AS no_show_count,
+        SUM(CASE 
+            WHEN fpp.transaction_type = 'LATE_CANCEL' THEN 1 
+            ELSE 0 
+        END) AS late_cancel_count
     FROM fact_partners_payout fpp
     JOIN dim_store_partner_products dsp ON fpp.partner_product_id = dsp.satya_partner_product_id
     LEFT JOIN capped_visit_cost cvc 
@@ -125,7 +145,12 @@ SELECT
     pn.cap_less_than_cost_count,
     ROUND(CAST(pn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits,
     ROUND(CAST(pn.jan_total_revenue AS FLOAT) / tn.total_revenue * 100, 2) AS pct_total_revenue,
-    ROUND(CAST(pn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment
+    ROUND(CAST(pn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment,
+    ROUND(CAST(pn.no_show_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_no_show,
+    ROUND(CAST(pn.late_cancel_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_late_cancel,
+    -- Novas colunas adicionadas
+    ROUND(CAST(pn.cap_hit_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_cap_hit, -- % de vezes que o CAP foi atingido
+    ROUND(CAST(pn.cap_less_than_cost_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- % de vezes que o CAP era menor que o custo
 FROM product_numbers pn
 CROSS JOIN total_numbers tn
 ORDER BY pn.jan_total_payment DESC;
@@ -193,7 +218,10 @@ SELECT
     sn.cap_less_than_cost_count,
     ROUND(CAST(sn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits,
     ROUND(CAST(sn.jan_total_revenue AS FLOAT) / tn.total_revenue * 100, 2) AS pct_total_revenue,
-    ROUND(CAST(sn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment
+    ROUND(CAST(sn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment,
+    -- Novas colunas adicionadas
+    ROUND(CAST(sn.cap_hit_count AS FLOAT) / sn.jan_total_visits * 100, 2) AS pct_cap_hit, -- % de vezes que o CAP foi atingido
+    ROUND(CAST(sn.cap_less_than_cost_count AS FLOAT) / sn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- % de vezes que o CAP era menor que o custo
 FROM segment_numbers sn
 CROSS JOIN total_numbers tn
 ORDER BY sn.jan_total_payment DESC;
@@ -260,7 +288,10 @@ SELECT
     ttn.cap_less_than_cost_count,
     ROUND(CAST(ttn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits,
     ROUND(CAST(ttn.jan_total_revenue AS FLOAT) / tn.total_revenue * 100, 2) AS pct_total_revenue,
-    ROUND(CAST(ttn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment
+    ROUND(CAST(ttn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment,
+    -- Novas colunas adicionadas
+    ROUND(CAST(ttn.cap_hit_count AS FLOAT) / ttn.jan_total_visits * 100, 2) AS pct_cap_hit, -- % de vezes que o CAP foi atingido
+    ROUND(CAST(ttn.cap_less_than_cost_count AS FLOAT) / ttn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- % de vezes que o CAP era menor que o custo
 FROM transaction_type_numbers ttn
 CROSS JOIN total_numbers tn
 ORDER BY ttn.jan_total_payment DESC;
@@ -332,7 +363,10 @@ SELECT
     sgn.cap_less_than_cost_count,
     ROUND(CAST(sgn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits,
     ROUND(CAST(sgn.jan_total_revenue AS FLOAT) / tn.total_revenue * 100, 2) AS pct_total_revenue,
-    ROUND(CAST(sgn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment
+    ROUND(CAST(sgn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment,
+    -- Novas colunas adicionadas
+    ROUND(CAST(sgn.cap_hit_count AS FLOAT) / sgn.jan_total_visits * 100, 2) AS pct_cap_hit, -- % de vezes que o CAP foi atingido
+    ROUND(CAST(sgn.cap_less_than_cost_count AS FLOAT) / sgn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- % de vezes que o CAP era menor que o custo
 FROM session_group_numbers sgn
 CROSS JOIN total_numbers tn
 ORDER BY sgn.jan_total_payment DESC;

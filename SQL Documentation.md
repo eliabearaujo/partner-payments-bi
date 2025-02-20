@@ -121,4 +121,227 @@ Before proceeding further, we will create queries to verify the structure of our
 
 ![Data_check_up.png](Assets/img/Data_check_up.png)
 
-As can be seen, the tables contain data in the same format. Table 1 shows 99 rows, which matches the value verified in Python, as do the row counts for Table 2 and Table 3. To further verify the integrity of the data, we also checked the average values for the 'transaction_cost' and 'product_cap' columns, and both returned the same values obtained when we corrected the CAP and data types in Python.
+The tables contain data in the same format, as observed. Table 1 has 99 rows, which matches the value verified in Python. The same applies to the row counts for Table 2 and Table 3. To ensure data integrity, we also checked the average values for the 'transaction_cost' and 'product_cap' columns, and both matched the values obtained after correcting the CAP and data types in Python.
+
+## Analysis
+
+To begin the analysis, it is essential to validate a key premise, as it directly impacts the calculation of partner payments. The premise in question is whether users can schedule more than one appointment on the same day. If this were possible, the total payments could potentially be constrained by the CAP limit.
+
+To verify this, the following query was executed. The expected outcome of this query is an empty result set, as it would only return cases where a user had multiple sessions on the same day.
+
+```sql
+  SELECT
+    gympass_individual_id,
+    CAST(session_considered_at_localtime AS DATE) AS session_date,
+    COUNT(*) AS session_count
+FROM fact_partners_payout
+GROUP BY gympass_individual_id, CAST(session_considered_at_localtime AS DATE)
+HAVING COUNT(*) > 1;
+```
+
+![Sessions_count.png](Assets/img/Sessions_count.png)
+
+Having confirmed that customers can schedule only one appointment per day, we will proceed with the analysis from two distinct perspectives.
+
+The first perspective focuses on the partner, their segment, and the products offered. The objective is to assess the partner's performance, understand their positioning relative to other partners, evaluate their adherence to the CAP, and identify potential areas for improvement.
+
+The second approach examines the different types of payments that each transaction can receive. We will classify the "Validation" and "Retroactive" options as confirmed and completed sessions, while "Late Cancel" and "No Show" transactions will be considered as unfulfilled sessions. This will allow us to assess the financial impact on partners and the costs incurred by us due to these types of transactions.
+
+Several indicators have been developed to analyze performance from different perspectives. These indicators include:
+
+| **Indicador**            | **Description**                                                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------- |
+| jan_total_visits         | Represents the volume of visits in the month of January.                                  |
+| avg_visits_per_day       | Represents the average daily volume of visits received.                                   |
+| avg_revenue_per_day      | Represents the average daily revenue.                                                     |
+| jan_total_payment        | Represents the total amount paid, already considering the CAP.                            |
+| avg_cap                  | Represents the average CAP value.                                                         |
+| cap_hit_count            | Represents the number of times the CAP was reached.                                       |
+| cap_less_than_cost_count | Represents the number of times the cost exceeds the CAP.                                  |
+| pct_total_visits         | Represents the percentage of visits relative to the total.                                |
+| pct_total_payment        | Represents the percentage of the amount paid relative to the total.                       |
+| pct_cap_hit              | Represents the percentage of times the CAP was reached relative to the total.             |
+| pct_cap_less_than_cost   | Represents the percentage of times the CAP was lower than the cost relative to the total. |
+
+### Analysis by Partner
+
+Looking at these indicators from the partner's perspective, we have the following query:
+
+```sql
+  WITH all_days AS (
+    SELECT DISTINCT CAST(fpp.session_considered_at_localtime AS DATE) AS visit_date
+    FROM fact_partners_payout fpp -- This section allows us to calculate the number of days the platform "operated," rather than just counting the days the partner was active. By doing so, we can perform calculations for the entire month of January, rather than just for the days when appointments were made for that particular partner or service.
+),
+capped_visit_cost AS (
+    SELECT
+        fpp.core_partner_id,
+        fpp.gympass_individual_id,
+        fpp.partner_product_id,
+        fpp.session_considered_at_localtime,
+        fpp.transaction_cost,
+        fpp.product_cap,
+        CASE
+            WHEN fpp.transaction_cost > fpp.product_cap THEN fpp.product_cap
+            ELSE fpp.transaction_cost
+        END AS capped_cost -- Pays the lower value between transaction_cost and product_cap.
+    FROM fact_partners_payout fpp
+),
+partner_numbers AS (
+    SELECT
+        dsp.partner_trade_name,
+        COUNT(*) AS jan_total_visits,
+        SUM(fpp.transaction_cost) AS jan_total_revenue,
+        SUM(cvc.capped_cost) AS jan_total_payment,
+        ROUND(AVG(fpp.product_cap), 2) AS avg_cap, -- Average CAP per partner
+        SUM(CASE
+            WHEN fpp.transaction_cost >= fpp.product_cap THEN 1
+            ELSE 0
+        END) AS cap_hit_count, -- Counts the number of times the CAP was reached.
+        SUM(CASE
+            WHEN fpp.transaction_cost > fpp.product_cap THEN 1
+            ELSE 0
+        END) AS cap_less_than_cost_count -- Counts the number of times the CAP was lower than the cost.
+    FROM fact_partners_payout fpp
+    JOIN dim_store_partners dsp ON fpp.core_partner_id = dsp.core_partner_id
+    LEFT JOIN capped_visit_cost cvc
+        ON fpp.core_partner_id = cvc.core_partner_id
+        AND fpp.gympass_individual_id = cvc.gympass_individual_id
+        AND fpp.partner_product_id = cvc.partner_product_id
+        AND fpp.session_considered_at_localtime = cvc.session_considered_at_localtime
+    GROUP BY dsp.partner_trade_name
+),
+total_numbers AS (
+    SELECT
+        SUM(jan_total_visits) AS total_visits,
+        SUM(jan_total_payment) AS total_payment
+    FROM partner_numbers
+)
+SELECT
+    pn.partner_trade_name,
+    pn.jan_total_visits,
+    ROUND(CAST(pn.jan_total_visits AS FLOAT) / (SELECT COUNT(*) FROM all_days), 2) AS avg_visits_per_day,
+    ROUND(CAST(pn.jan_total_revenue AS FLOAT) / (SELECT COUNT(*) FROM all_days), 2) AS avg_revenue_per_day,
+    pn.jan_total_payment,
+    pn.avg_cap,
+    pn.cap_hit_count,
+    pn.cap_less_than_cost_count,
+    ROUND(CAST(pn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits, -- Percentage of visits relative to the total.
+    ROUND(CAST(pn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment, -- Percentage of the amount paid relative to the total.
+    ROUND(CAST(pn.cap_hit_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_cap_hit, -- Percentage of times the CAP was reached.
+    ROUND(CAST(pn.cap_less_than_cost_count AS FLOAT) / pn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- Percentage of times the CAP was lower than the cost.
+FROM partner_numbers pn
+CROSS JOIN total_numbers tn
+ORDER BY pn.jan_total_payment DESC;
+```
+
+The result of this query is:
+
+![partners_perspective.png](Assets/img/partners_perspective.png)
+
+**Key Insights and Observations:**
+
+- **HealthFirst Wellness Performance:**
+
+- - HealthFirst Wellness accounts for 19.19% of total visits but 23.08% of total payments. This suggests that, despite not being the partner with the highest number of visits, its transactions generate proportionally higher revenue. This could indicate that HealthFirst Wellness offers premium services or higher-priced products within its segment. However, this cannot be confirmed definitively, as it is the only partner in its segment within the dataset.
+
+* **pct_cap_hit Analysis:**
+
+* - The pct_cap_hit metric reveals that 50% to 73.68% of transactions reached the CAP limit. This indicates that payments are frequently constrained by the established ceiling. HealthFirst Wellness had the highest percentage (73.68%), suggesting that this partner may be operating at the edge of its margins.
+
+* **pct_cap_less_than_cost Insights:**
+
+- - The pct_cap_less_than_cost metric measures the percentage of sessions where the actual cost exceeded the CAP. HealthFirst Wellness and StrongFit Studio had the highest values (~31%), reinforcing the possibility that these partners may be under-remunerated. In contrast, FitClub Gym had the lowest impact in this regard (25%), likely due to its higher CAP relative to its average cost.
+
+### Analysis by Segment
+
+A second approach that can be adopted is to analyze partners based on their segments. This allows us to identify whether any specific segment stands out in terms of performance or impact. To conduct this analysis, we only need to modify the grouping in the previous query, resulting in the following query:
+
+```sql
+  WITH all_days AS (
+    SELECT DISTINCT CAST(fpp.session_considered_at_localtime AS DATE) AS visit_date
+    FROM fact_partners_payout fpp
+),
+capped_visit_cost AS (
+    SELECT
+        fpp.core_partner_id,
+        fpp.gympass_individual_id,
+        fpp.partner_product_id,
+        fpp.session_considered_at_localtime,
+        fpp.transaction_cost,
+        fpp.product_cap,
+        CASE
+            WHEN fpp.transaction_cost > fpp.product_cap THEN fpp.product_cap
+            ELSE fpp.transaction_cost
+        END AS capped_cost -- Paga o menor valor entre transaction_cost e product_cap
+    FROM fact_partners_payout fpp
+),
+segment_numbers AS (
+    SELECT
+        dsp.segment_type, -- Segmento do parceiro
+        COUNT(*) AS jan_total_visits,
+        SUM(fpp.transaction_cost) AS jan_total_revenue,
+        SUM(cvc.capped_cost) AS jan_total_payment,
+        ROUND(AVG(fpp.product_cap), 2) AS avg_cap, -- CAP médio por segmento
+        SUM(CASE
+            WHEN fpp.transaction_cost >= fpp.product_cap THEN 1
+            ELSE 0
+        END) AS cap_hit_count, -- Conta quantas vezes o CAP foi atingido
+        SUM(CASE
+            WHEN fpp.transaction_cost > fpp.product_cap THEN 1
+            ELSE 0
+        END) AS cap_less_than_cost_count -- Conta quantas vezes o CAP era menor que o custo
+    FROM fact_partners_payout fpp
+    JOIN dim_store_partners dsp ON fpp.core_partner_id = dsp.core_partner_id
+    LEFT JOIN capped_visit_cost cvc
+        ON fpp.core_partner_id = cvc.core_partner_id
+        AND fpp.gympass_individual_id = cvc.gympass_individual_id
+        AND fpp.partner_product_id = cvc.partner_product_id
+        AND fpp.session_considered_at_localtime = cvc.session_considered_at_localtime
+    GROUP BY dsp.segment_type
+),
+total_numbers AS (
+    SELECT
+        SUM(jan_total_visits) AS total_visits,
+        SUM(jan_total_revenue) AS total_revenue,
+        SUM(jan_total_payment) AS total_payment
+    FROM segment_numbers
+)
+SELECT
+    sn.segment_type,
+    sn.jan_total_visits,
+    ROUND(CAST(sn.jan_total_visits AS FLOAT) / (SELECT COUNT(*) FROM all_days), 2) AS avg_visits_per_day,
+    ROUND(CAST(sn.jan_total_revenue AS FLOAT) / (SELECT COUNT(*) FROM all_days), 2) AS avg_revenue_per_day,
+    sn.jan_total_payment,
+    sn.avg_cap,
+    sn.cap_hit_count,
+    sn.cap_less_than_cost_count,
+    ROUND(CAST(sn.jan_total_visits AS FLOAT) / tn.total_visits * 100, 2) AS pct_total_visits,
+    ROUND(CAST(sn.jan_total_revenue AS FLOAT) / tn.total_revenue * 100, 2) AS pct_total_revenue,
+    ROUND(CAST(sn.jan_total_payment AS FLOAT) / tn.total_payment * 100, 2) AS pct_total_payment,
+    -- Novas colunas adicionadas
+    ROUND(CAST(sn.cap_hit_count AS FLOAT) / sn.jan_total_visits * 100, 2) AS pct_cap_hit, -- % de vezes que o CAP foi atingido
+    ROUND(CAST(sn.cap_less_than_cost_count AS FLOAT) / sn.jan_total_visits * 100, 2) AS pct_cap_less_than_cost -- % de vezes que o CAP era menor que o custo
+FROM segment_numbers sn
+CROSS JOIN total_numbers tn
+ORDER BY sn.jan_total_payment DESC;
+```
+
+The result of this query is:
+
+![segment_perspective.png](Assets/img/segment_perspective.png)
+
+**Key Insights and Observations:**
+
+- **Studios Dominate Visits and Revenue:**
+
+* - 43.43% of visits and 43.72% of revenue come from Studios. Studios appear to be the most popular choice, generating the majority of visits and revenue. However, Wellness Centers, despite having fewer visits, contribute a relatively high percentage of revenue. This suggests that the services offered by Wellness Centers may have higher added value, even though there is only one representative in this category (HealthFirst Wellness).
+
+- **Wellness Centers Hit CAP More Frequently:**
+
+* - Wellness Centers reach the CAP more often, indicating that their services frequently hit the payment limit. This could suggest a low CAP for this partner category, potentially leading to operational challenges. Partners in this category may become detractors in service-level indicators and are more likely to request adjustments, which could ultimately result in higher costs for end consumers.
+
+- **Wellness Centers Face More Underpayment Issues**
+
+* - The pct_cap_less_than_cost metric shows that 31.58% of transactions in Wellness Centers have costs exceeding the CAP. In comparison, Studios and Full-Service Gyms are more balanced (~25%). This suggests that Wellness Centers may be under-remunerated more frequently, operating with reduced margins or even incurring losses on certain transactions.
+
+* - If this trend continues, partners in this segment may lose interest in the platform or need to adjust their pricing, which could reduce the platform's attractiveness to customers.
