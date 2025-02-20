@@ -124,9 +124,28 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 
 ![payments_dashboard.png](Assets/img/payments_dashboard.png)
 
-## Recomendaçoes
+## Recomendations
 
--
+#### Partner Training
+
+- It is crucial to ensure that partners fully understand the operational processes, associated costs, and the financial impact of their decisions. If this understanding is lacking, a key initiative would be conducting training sessions. These sessions can raise awareness about their financial reality, strengthening the partnership and ensuring mutual benefits. A well-informed partner can optimize management and, as a result, enhance the end-customer experience.
+
+#### Capacity Utilization Analysis
+
+- Understanding each partner’s maximum capacity and their usual occupancy rate is essential for developing effective strategies. Identifying occupancy patterns can enable the creation of promotional campaigns and commercial strategies to increase utilization rates, maximize monthly revenue, and optimize space usage.
+
+#### Benchmarking Among Partners in the Same Segment
+
+- A detailed analysis should be conducted to understand why certain partners underperform compared to others in the same segment. From this investigation, it is possible to identify areas for improvement and implement strategic actions that strengthen the partnership, optimize results, and ensure a superior customer experience.
+
+#### Reducing Cancellations and No-Shows
+
+- Given that approximately 40% of transactions fail due to cancellations or no-shows, implementing strategies to mitigate this impact is essential. Some recommended actions include:
+
+* - Sending notifications to remind users of their appointments and request attendance confirmation.
+* - Waitlist system, ensuring that slots canceled in advance are automatically reassigned to interested users.
+* - Incentives for frequent users, offering benefits such as priority booking for high-demand time slots to those with a strong attendance record.
+* - Identifying periods with higher cancellation and no-show rates can allow for strategic adjustments in promotions and booking policies.
 
 ## Assumptions
 
