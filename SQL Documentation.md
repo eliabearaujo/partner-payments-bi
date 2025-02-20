@@ -432,6 +432,18 @@ The result of this query is:
 
 **Key Insights and Observations:**
 
-- **Studios Dominate Visits and Revenue:**
+- **Overall Impact:**
 
-* - 43.43% of visits and 43.72% of revenue come from Studios. Studios appear to be the most popular choice, generating the majority of visits and revenue. However, Wellness Centers, despite having fewer visits, contribute a relatively high percentage of revenue. This suggests that the services offered by Wellness Centers may have higher added value, even though there is only one representative in this category (HealthFirst Wellness).
+* - Unrealized sessions (Late Cancel + No Show) account for 41.41% of scheduled visits and 31.27% of the amount paid to partners, demonstrating a significant operational impact.
+
+- **Late Cancel Analysis:**
+
+* - Late Cancel represents nearly 1/3 of scheduled visits and almost 20% of payments to partners, indicating that this cancellation category contributes significantly to revenue.
+
+- **Late Cancel Analysis:**
+
+* - 50% of transactions classified as No Show have a CAP lower than the actual cost, representing a financial risk, especially for services that require prior scheduling, such as Nutritionists and Personal Trainers.
+
+* - These services account for nearly 40% of the amount paid to partners, but due to cancellations, they may be operating at a loss.
+
+* - These activities have an ~45% unrealized session rate and ~65% of transactions result in payments below the actual cost, which could compromise the viability of these services on the platform.
