@@ -108,7 +108,7 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 
 - - If this trend continues, these partners may lose interest in the platform or demand price adjustments, potentially reducing attractiveness for customers.
 
-[Segments_dashboard.png](Assets/img/Segments_dashboard.png)
+![segment_dashboard.png](Assets/img/Segment_dashboard.png)
 
 #### Impact of Cancellations and No-Shows:
 
@@ -122,7 +122,7 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 
 - - They experience **~45% of unfulfilled sessions**, and in **~65% of cases, payments fall below actual costs**, which may threaten the sustainability of these services on the platform.
 
-[payments_dashboard.png](Assets/img/payments_dashboard.png)
+![payments_dashboard.png](Assets/img/payments_dashboard.png)
 
 ## Recomendaçoes
 
