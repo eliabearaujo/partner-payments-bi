@@ -447,3 +447,47 @@ The result of this query is:
 * - These services account for nearly 40% of the amount paid to partners, but due to cancellations, they may be operating at a loss.
 
 * - These activities have an ~45% unrealized session rate and ~65% of transactions result in payments below the actual cost, which could compromise the viability of these services on the platform.
+
+## Full base
+
+With the queries finalized, we will now write one last query to combine all the datasets into a single file. This unified dataset will serve as the foundation for building the Looker Studio dashboard. The query is as follows:
+
+```sql
+ SELECT
+    fpp.*,
+    dsp.partner_trade_name,
+    dsp.address,
+    dsp.contact_number,
+    dsp.segment_type AS partner_segment,
+    dsp.country,
+    dspp.activity_name,
+    dspp.product_cost_per_usage,
+    dspp.product_cap_value,
+    dspp.segment_type AS product_segment,
+    dspp.last_price_update,
+    CASE
+        WHEN fpp.transaction_type IN ('Retroactive', 'Validation') THEN 'Sessão Realizada'
+        WHEN fpp.transaction_type IN ('Late_Cancel', 'No_Show') THEN 'Sessão não Realizada'
+        ELSE 'Outros'
+    END AS session_group,
+    CASE
+        WHEN fpp.transaction_cost > fpp.product_cap THEN fpp.product_cap
+        ELSE fpp.transaction_cost
+    END AS capped_cost,
+    CASE
+        WHEN fpp.transaction_cost >= fpp.product_cap THEN 1
+        ELSE 0
+    END AS cap_hit_flag,
+    CASE
+        WHEN fpp.transaction_cost > fpp.product_cap THEN 1
+        ELSE 0
+    END AS cap_less_than_cost_flag
+FROM fact_partners_payout fpp
+LEFT JOIN dim_store_partners dsp
+    ON fpp.core_partner_id = dsp.core_partner_id
+LEFT JOIN dim_store_partner_products dspp
+    ON fpp.partner_product_id = dspp.satya_partner_product_id
+ORDER BY fpp.transaction_cost DESC;
+```
+
+The resulting dataset from this query, which will serve as the data source for the Looker dashboard, can be found at [this link](https://docs.google.com/spreadsheets/d/15zLOS7lZxhU0PF5oKwOeHG3uR-E1dPyxp5oh9SIAlTs/edit?usp=sharing).

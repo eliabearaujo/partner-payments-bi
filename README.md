@@ -22,7 +22,7 @@ The **`Python` code** used to prepare, inspect, and clean the dataset is availab
 
 The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/5995d325f714914589f45f10df4e0271151b3adc/SQL%20Documentation.md).
 
-The **interactive dashboard**, designed to visualize and interact with the dataset, is accessible at [this link](https://lookerstudio.google.com/reporting/257afb5e-76c0-4ab8-9da6-e5f17ca62766).
+The **interactive dashboard**, designed to visualize and interact with the dataset, is accessible at [this link](https://lookerstudio.google.com/reporting/888ad2f7-08f5-4b0e-861c-3f6a3228bdcc).
 
 The **slides containing the key insights, analyses, and detailed project information** can be accessed at [this link](https://docs.google.com/presentation/d/1e0y7xExZyQUu8JX5iuNiSbKyn2s2LN8Lj17Ci0H8LzM/edit?usp=sharing).
 
@@ -90,6 +90,8 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 
 - **FitClub Gym** had the lowest impact in this regard **(25%)**, likely due to a higher CAP relative to its average costs.
 
+![Partners_dashboard.png](Assets/img/Partners_dashboard.png)
+
 #### Segment Analysis:
 
 - **Studios** account for **43.43% of visits and 43.72% of the total partner payouts**, suggesting they are a popular and accessible option for consumers. However, **Wellness Centers**, despite having only one partner in this analysis **(HealthFirst Wellness)**, hold a relatively high revenue share, indicating a **higher perceived value or a premium classification**.
@@ -106,6 +108,8 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 
 - - If this trend continues, these partners may lose interest in the platform or demand price adjustments, potentially reducing attractiveness for customers.
 
+[Segments_dashboard.png](Assets/img/Segments_dashboard.png)
+
 #### Impact of Cancellations and No-Shows:
 
 - **Unfulfilled sessions (Late Cancel + No Show**) account for **41.41% of scheduled visits and 31.27% of total partner payouts**, showing a significant operational impact.
@@ -117,6 +121,8 @@ The Product Details dataset contains **15 rows**, with **each row representing a
 - - These services represent almost **40% of the total partner payouts**, but due to cancellations, they may be operating at a loss.
 
 - - They experience **~45% of unfulfilled sessions**, and in **~65% of cases, payments fall below actual costs**, which may threaten the sustainability of these services on the platform.
+
+[payments_dashboard.png](Assets/img/payments_dashboard.png)
 
 ## Recomendaçoes
 
