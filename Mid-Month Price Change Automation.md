@@ -28,8 +28,6 @@ During the initial data assessment, the following assumptions were made to ensur
 
 - Although the product table indicates a CAP and cost per product, the data structure will be designed so that partners with the same product can have different CAPs and costs. This allows us to make changes specific to a particular partner and product.
 
-- Estamos considerando tambem que as solicitacoes
-
 - CAP Adjustment → Upon reviewing the provided datasets, I identified that the CAP value is approximately 10 times the session cost. Based on the case description, which defines the CAP (Maximum Payment Limit) as the maximum amount that can be paid per visit, and considering the provided example where the session cost is close to the CAP value, we adjusted this metric by dividing the reported CAP by 10.
 
 - Classification of Payment Type → The "Retroactive" payment type was classified as completed sessions, which were paid with a certain delay.
@@ -43,7 +41,7 @@ After conducting an initial analysis, data cleaning, and correction using **Pyth
 ### Initial Setup
 
 The first step is to create a new database, which will be responsible for storing the rules, validations, and data for the tables that will be created in the future.
-The step-by-step guide for building the database can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/5995d325f714914589f45f10df4e0271151b3adc/Assets/SQL%20Queries/Tables%20created.sql).
+The step-by-step guide for building the database can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/SQL%20Documentation.md).
 
 With the database creation completed, we will now proceed with the creation of the tables and populate them with data.
 
@@ -99,7 +97,7 @@ To implement the automation, the following three tables are required:
 | segment_type             | Represents the segment or category of the partner.                                                                                                                                |
 | last_price_update        | Represents the date and time when the CAP or product cost was last updated.                                                                                                       |
 
-Now that we have the structure of the tables, we can create them within our database and populate them with data that will serve as a test to validate the requests for changes in cost and CAP. For this, the following MySQL query was used. It can also be viewed at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/5995d325f714914589f45f10df4e0271151b3adc/Assets/SQL%20Queries/Tables%20created.sql).
+Now that we have the structure of the tables, we can create them within our database and populate them with data that will serve as a test to validate the requests for changes in cost and CAP. For this, the following MySQL query was used. It can also be viewed at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/q2_test_tables_created.sql).
 
 ```sql
   CREATE TABLE payment_transactions (
@@ -514,16 +512,16 @@ Now, with the goal of finalizing the automation and building the dashboard in Lo
 
 These datasets contain a larger volume of data, so we will provide the links to the queries below:
 
-Create the tables within the database: Link
+Create the tables within the database: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/q2_table_created_ofc.sql)
 
-Register the partners: Link
+Register the partners: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/insert_partners.sql)
 
-Simulate transactions and visits: Link
+Simulate transactions and visits: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/insert_payment_transactions.sql)
 
-Change requests for CAP and cost: Link
+Change requests for CAP and cost: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/insert_cap_change_log.sql)
 
-Complete dataset, which feeds Google Sheets and Looker Studio: Link
+Complete dataset, which feeds Google Sheets and Looker Studio: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/q2_fullbase_ofc.sql)
 
-Google Sheets base: Link
+Google Sheets base: [Link](https://docs.google.com/spreadsheets/d/19wRz3b0-UOAgPd_hdLSJRE7m-6ATpl1pVGY82w6cqBA/edit?usp=sharing)
 
-Looker Studio dashboard: Link
+Looker Studio dashboard: [Link](https://lookerstudio.google.com/reporting/e9fc7a82-11cc-451b-948c-070f366280b8)

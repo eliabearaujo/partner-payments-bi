@@ -174,4 +174,20 @@ During the initial data assessment, the following assumptions were made to ensur
 
 - CAP Hit Calculation → To calculate the CAP hit metric, we considered transactions where the CAP is equal to the actual session cost as having reached the payment limit.
 
-## Phase 2: Mid-Month Price Change Automation
+### Phase 2: Mid-Month Price Change Automation
+
+## Project background
+
+This project aims to automate the process of updating prices and CAPs for multiple partners, ensuring that payments are always recalculated based on the new rules. The system must efficiently handle large volumes of data, applying changes in a way that reduces errors and manual effort.
+
+To execute this project, I will utilize part of the datasets and queries developed in [Phase 1](https://github.com/eliabearaujo/partner-payments-bi/blob/c100f8f8e7029e19a9760c9f156fced5871b126c/README.md), including the data structure and organization. We will use the datasets that have already been prepared, validated, and cleaned through a **Python script**, which can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/c100f8f8e7029e19a9760c9f156fced5871b126c/Partner_Performance_Insights_Business_Case.ipynb). These datasets will serve as the information source; we will not import them into SSMS but will use the already structured data to validate our automation process.
+
+We will also use **SQL Server Management Studio (SSMS)** to create tables, register information, and process price and CAP change requests. After building all the necessary datasets, we will extract a unified dataset via **CSV** and use it to build a dashboard in **Looker Studio**.
+
+As an automation project, its results are best expressed and observed in the project documentation. The links to the resolution of Phase 2 are provided below:
+
+The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Mid-Month%20Price%20Change%20Automation.md).
+
+The **interactive dashboard**, designed to visualize and interact with the dataset, is accessible at [this link](https://lookerstudio.google.com/reporting/e9fc7a82-11cc-451b-948c-070f366280b8).
+
+The **slides containing the key insights, analyses, and detailed project information** can be accessed at [this link](https://docs.google.com/presentation/d/1e0y7xExZyQUu8JX5iuNiSbKyn2s2LN8Lj17Ci0H8LzM/edit?usp=sharing).
