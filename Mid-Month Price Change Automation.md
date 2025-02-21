@@ -4,7 +4,7 @@
 
 This project aims to automate the process of updating prices and CAPs for multiple partners, ensuring that payments are always recalculated based on the new rules. The system must efficiently handle large volumes of data, applying changes in a way that reduces errors and manual effort.
 
-To execute this project, I will utilize part of the datasets and queries developed in [Phase 1](https://github.com/eliabearaujo/partner-payments-bi/blob/c100f8f8e7029e19a9760c9f156fced5871b126c/README.md), including the data structure and organization. We will use the datasets that have already been prepared, validated, and cleaned through a **Python script**, which can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/c100f8f8e7029e19a9760c9f156fced5871b126c/Partner_Performance_Insights_Business_Case.ipynb). These datasets will serve as the information source; we will not import them into SSMS but will use the already structured data to validate our automation process.
+To execute this project, I will utilize part of the datasets and queries developed in [Phase 1](https://github.com/eliabearaujo/partner-payments-bi/tree/main), including the data structure and organization. We will use the datasets that have already been prepared, validated, and cleaned through a **Python script**, which can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Partner_Performance_Insights_Business_Case.ipynb). These datasets will serve as the information source; we will not import them into SSMS but will use the already structured data to validate our automation process.
 
 We will also use **SQL Server Management Studio (SSMS)** to create tables, register information, and process price and CAP change requests. After building all the necessary datasets, we will extract a unified dataset via **CSV** and use it to build a dashboard in **Looker Studio**.
 
@@ -41,7 +41,7 @@ After conducting an initial analysis, data cleaning, and correction using **Pyth
 ### Initial Setup
 
 The first step is to create a new database, which will be responsible for storing the rules, validations, and data for the tables that will be created in the future.
-The step-by-step guide for building the database can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/SQL%20Documentation.md).
+The step-by-step guide for building the database can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/SQL%20Documentation.md).
 
 With the database creation completed, we will now proceed with the creation of the tables and populate them with data.
 
@@ -97,7 +97,7 @@ To implement the automation, the following three tables are required:
 | segment_type             | Represents the segment or category of the partner.                                                                                                                                |
 | last_price_update        | Represents the date and time when the CAP or product cost was last updated.                                                                                                       |
 
-Now that we have the structure of the tables, we can create them within our database and populate them with data that will serve as a test to validate the requests for changes in cost and CAP. For this, the following MySQL query was used. It can also be viewed at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/q2_test_tables_created.sql).
+Now that we have the structure of the tables, we can create them within our database and populate them with data that will serve as a test to validate the requests for changes in cost and CAP. For this, the following MySQL query was used. It can also be viewed at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries/q2_test_tables_created.sql).
 
 ```sql
   CREATE TABLE payment_transactions (
@@ -512,13 +512,13 @@ Now, with the goal of finalizing the automation and building the dashboard in Lo
 
 These datasets contain a larger volume of data, so we will provide the links to the queries below:
 
-Create the tables within the database: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/q2_table_created_ofc.sql)
+Create the tables within the database: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries/q2_table_created_ofc.sql)
 
-Register the partners: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/insert_partners.sql)
+Register the partners: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries/insert_partners.sql)
 
-Simulate transactions and visits: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/insert_payment_transactions.sql)
+Simulate transactions and visits: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries/insert_payment_transactions.sql)
 
-Change requests for CAP and cost: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/insert_cap_change_log.sql)
+Change requests for CAP and cost: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries/insert_cap_change_log.sql)
 
 Complete dataset, which feeds Google Sheets and Looker Studio: [Link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Assets/SQL%20Queries/q2_fullbase_ofc.sql)
 

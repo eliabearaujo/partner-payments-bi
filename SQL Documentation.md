@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project aims to analyze a dataset representing visits and payments to partners, including details on activities, segments, and payment types. To conduct the analysis, I will use **Python** for data preparation, validation, and cleaning due to its flexibility and efficiency. After this stage, the data will be exported in **CSV** format and imported into **SQL Server Management Studio (SSMS)**, where it will be structured and processed to identify key correlations and extract strategic insights.Throughout this document, I will explain the step-by-step process of creating the database, importing CSV spreadsheets, and demonstrating how the queries were structured along with their objectives. For brevity, the queries can also be accessed through [this link](https://github.com/eliabearaujo/partner-payments-bi/tree/5995d325f714914589f45f10df4e0271151b3adc/Assets/SQL%20Queries).
+This project aims to analyze a dataset representing visits and payments to partners, including details on activities, segments, and payment types. To conduct the analysis, I will use **Python** for data preparation, validation, and cleaning due to its flexibility and efficiency. After this stage, the data will be exported in **CSV** format and imported into **SQL Server Management Studio (SSMS)**, where it will be structured and processed to identify key correlations and extract strategic insights.Throughout this document, I will explain the step-by-step process of creating the database, importing CSV spreadsheets, and demonstrating how the queries were structured along with their objectives. For brevity, the queries can also be accessed through [this link](https://github.com/eliabearaujo/partner-payments-bi/tree/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries).
 
 ## Understanding the Case
 
@@ -44,7 +44,7 @@ To create the database, it was necessary to start a local server to simulate a s
 ![Database_3.png](Assets/img/Database_3.png)
 
 With the database creation completed, we will now proceed with creating the tables that will store our data.
-For this, the following MySQL query was used. It can also be viewed at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/5995d325f714914589f45f10df4e0271151b3adc/Assets/SQL%20Queries/Tables%20created.sql).
+For this, the following MySQL query was used. It can also be viewed at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Assets/SQL%20Queries/Tables%20created.sql).
 
 ```sql
   CREATE TABLE fact_partners_payout (

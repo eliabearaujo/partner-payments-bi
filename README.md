@@ -35,9 +35,9 @@ For the development of this project, **`Python`** was used for data preparation,
 
 Subsequently, a consolidated table was extracted in **`CSV`** format and imported into **`Google Sheets`**, enabling integration with **`Looker Studio`**. This connection facilitated the creation of interactive and dynamic visualizations, supporting data analysis based on formulated hypotheses and providing a clearer and more in-depth understanding of the results.
 
-The **`Python` code** used to prepare, inspect, and clean the dataset is available for reference at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/30c24ca7c1d7ec57e8c0b40365bf8ea2eac0632f/Partner_Performance_Insights_Business_Case.ipynb).
+The **`Python` code** used to prepare, inspect, and clean the dataset is available for reference at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Partner_Performance_Insights_Business_Case.ipynb).
 
-The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/38a11936124ac76513179b3f32e468f07d691b53/SQL%20Documentation.md).
+The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/SQL%20Documentation.md).
 
 The **interactive dashboard**, designed to visualize and interact with the dataset, is accessible at [this link](https://lookerstudio.google.com/reporting/888ad2f7-08f5-4b0e-861c-3f6a3228bdcc).
 
@@ -180,13 +180,13 @@ During the initial data assessment, the following assumptions were made to ensur
 
 This project aims to automate the process of updating prices and CAPs for multiple partners, ensuring that payments are always recalculated based on the new rules. The system must efficiently handle large volumes of data, applying changes in a way that reduces errors and manual effort.
 
-To execute this project, I will utilize part of the datasets and queries developed in [Phase 1](https://github.com/eliabearaujo/partner-payments-bi/blob/c100f8f8e7029e19a9760c9f156fced5871b126c/README.md), including the data structure and organization. We will use the datasets that have already been prepared, validated, and cleaned through a **Python script**, which can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/c100f8f8e7029e19a9760c9f156fced5871b126c/Partner_Performance_Insights_Business_Case.ipynb). These datasets will serve as the information source; we will not import them into SSMS but will use the already structured data to validate our automation process.
+To execute this project, I will utilize part of the datasets and queries developed in phase 1, including the data structure and organization. We will use the datasets that have already been prepared, validated, and cleaned through a **Python script**, which can be viewed [here](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Partner_Performance_Insights_Business_Case.ipynb). These datasets will serve as the information source; we will not import them into SSMS but will use the already structured data to validate our automation process.
 
 We will also use **SQL Server Management Studio (SSMS)** to create tables, register information, and process price and CAP change requests. After building all the necessary datasets, we will extract a unified dataset via **CSV** and use it to build a dashboard in **Looker Studio**.
 
 As an automation project, its results are best expressed and observed in the project documentation. The links to the resolution of Phase 2 are provided below:
 
-The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/e7555192151390530aff456e27aea997081320f2/Mid-Month%20Price%20Change%20Automation.md).
+The **`SQL` queries** used for data manipulation, along with the detailed step-by-step process for creating and structuring tables in SQL Server Management Studio (SSMS), can be found at [this link](https://github.com/eliabearaujo/partner-payments-bi/blob/dbae7314c775c6d6d9b94b5c0d8d11e118c17430/Mid-Month%20Price%20Change%20Automation.md).
 
 The **interactive dashboard**, designed to visualize and interact with the dataset, is accessible at [this link](https://lookerstudio.google.com/reporting/e9fc7a82-11cc-451b-948c-070f366280b8).
 
