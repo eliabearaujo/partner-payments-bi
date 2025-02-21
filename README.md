@@ -4,7 +4,24 @@
 
 ## Project background
 
-This project aims to **analyze a dataset containing information on visits and payments to partners, including details about activities, segments, and payment types**.
+The project aims to **analyze visit and payment data related to partners, generating business insights and automating price change processes**, with a focus on improving efficiency and decision-making within Partner Operations. The project is divided into **two main phases**, each with specific objectives:
+
+### Phase 1: Business Intelligence Insights Generation
+
+**Objective:**
+
+Leverage data on visits, partners, and products to generate strategic insights that support decision-making. This includes analyzing partner performance, calculating payments while considering the CAP (Maximum Payment Limit), and identifying trends by segment.
+The insights are provided in the following areas:
+
+### Phase 2: Mid-Month Price Change Automation
+
+**Objective:**
+
+Automate the process of updating prices and CAPs for multiple partners, ensuring that payments are recalculated accurately based on new rules. The system must handle large volumes of data efficiently, applying changes seamlessly to reduce errors and manual effort.
+
+Throughout this documentation, I will present the solutions to both problems, starting with Phase 1: Business Intelligence Insights Generation, and upon its completion, we will move on to Phase 2: Mid-Month Price Change Automation. Additionally, the documentation will include links to supplementary materials that provide a step-by-step guide to the analysis and its results in greater detail.
+
+## Phase 1: Business Intelligence Insights Generation
 
 The insights are provided in the following areas:
 
@@ -156,3 +173,5 @@ During the initial data assessment, the following assumptions were made to ensur
 - Classification of Payment Type → The "Retroactive" payment type was classified as completed sessions, which were paid with a certain delay.
 
 - CAP Hit Calculation → To calculate the CAP hit metric, we considered transactions where the CAP is equal to the actual session cost as having reached the payment limit.
+
+## Phase 2: Mid-Month Price Change Automation

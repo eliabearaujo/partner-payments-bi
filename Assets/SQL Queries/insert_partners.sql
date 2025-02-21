@@ -1,0 +1,28 @@
+INSERT INTO partners (
+    core_partner_id, 
+    partner_trade_name, 
+    address, 
+    contact_number, 
+    segment_type, 
+    country
+) VALUES
+(101, 'FitClub Gym', '123 Main St, Downtown', '(202) 123-4567', 'Full Service Gym', 'United States'),
+(102, 'Iron Haven', '456 Oak Ave, Uptown', '(303) 555-6789', 'Strength Training', 'United States'),
+(103, 'Zen Yoga Studio', '789 Maple St, Midtown', '(415) 222-7890', 'Yoga & Wellness', 'Canada'),
+(104, 'Elite Fitness Center', '1010 Birch Rd, Suburbia', '(212) 888-1234', 'Full Service Gym', 'United States'),
+(105, 'Pulse Fitness', '2020 Pine St, Downtown', '(647) 555-2020', 'Boutique Gym', 'Canada'),
+(106, 'BodyWorks', '3030 Cedar Ln, Beachside', '(305) 777-3030', 'Strength Training', 'United States'),
+(107, 'Flex Zone', '4040 Palm Dr, Sunnyvale', '(818) 666-4040', 'CrossFit', 'United States'),
+(108, 'The Wellness Hub', '5050 Elm St, Central', '(514) 333-5050', 'Yoga & Wellness', 'Canada'),
+(109, 'Momentum Gym', '6060 Redwood Blvd, Hillside', '(917) 444-6060', 'Full Service Gym', 'United States'),
+(110, 'ProActive Sports Club', '7070 Spruce Ave, Riverside', '(720) 999-7070', 'Strength Training', 'United States'),
+(111, 'Vita Gym', '8080 Chestnut Rd, West End', '(450) 111-8080', 'Boutique Gym', 'Canada'),
+(112, 'Core Strength', '9090 Aspen Way, Downtown', '(213) 222-9090', 'Strength Training', 'United States'),
+(113, 'Gym Elite', '1111 Sequoia Rd, Metro City', '(646) 777-1111', 'Full Service Gym', 'United States'),
+(114, 'Peak Performance', '1212 Willow St, Suburbia', '(514) 888-1212', 'CrossFit', 'Canada'),
+(115, 'Titan Training', '1313 Oakwood Dr, Northside', '(305) 555-1313', 'Strength Training', 'United States'),
+(116, 'UrbanFit', '1414 Cedar Park, City Center', '(778) 333-1414', 'Boutique Gym', 'Canada'),
+(117, 'Health & Harmony', '1515 Palm Blvd, East End', '(212) 444-1515', 'Yoga & Wellness', 'United States'),
+(118, 'SweatLab', '1616 Redwood Ave, Downtown', '(403) 999-1616', 'CrossFit', 'Canada'),
+(119, 'MindBody Gym', '1717 Birch Rd, Lakeside', '(646) 666-1717', 'Yoga & Wellness', 'United States'),
+(120, 'Balance Studio', '1818 Maple Lane, Greenfield', '(519) 777-1818', 'Yoga & Wellness', 'Canada');
